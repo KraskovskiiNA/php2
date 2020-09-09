@@ -26,7 +26,7 @@ $price_after_discount = $a->sale(10); // 180
 $b = new UsaPrice(300, 'yellow', 88);
 $b->new_price(); // 3,41
 
-// Ex 6
+// Ex 5
 
 class A {
     public function foo() {
