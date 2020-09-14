@@ -1,0 +1,8 @@
+{
+    "name": "php2/app",
+    "description" : "description",
+    "authors": [],
+    "autoload": {
+      "psr-4": {"app\\": "php2/"}
+    }
+  }
