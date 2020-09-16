@@ -1,10 +1,10 @@
 <?php
-namespace app;
-require __DIR__ . "/vendor/autoload.php";
-// include dirname(__DIR__) . "/services/autoLoad.php";
-// spl_autoload_register([(new autoLoad()), 'load']);
+use app\services\AutoLoad;
+use app\models\Good;
+include dirname(__DIR__) . "/services/autoLoad.php";
+spl_autoload_register([(new autoLoad()), 'load']);
 
-$bd = new DB();
+$bd = new \app\services\DB();
 $good = new Good($bd);
 echo $good->getOneGood(12);
 echo '<hr>';

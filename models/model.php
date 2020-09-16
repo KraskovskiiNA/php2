@@ -1,9 +1,11 @@
 <?php
+namespace app\models;
+use app\services\DB;
 abstract class Model
 {
     protected $db;
 
-    public function __construct($db)
+    public function __construct(DB $db)
     {
         $this->db = $db;
     }
