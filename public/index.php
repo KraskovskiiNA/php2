@@ -1,11 +1,13 @@
 <?php
 use app\services\AutoLoad;
 use app\models\Good;
+use app\models\User;
 include dirname(__DIR__) . "/services/autoLoad.php";
-spl_autoload_register([(new autoLoad()), 'load']);
+spl_autoload_register([(new AutoLoad()), 'load']);
 
-$bd = new \app\services\DB();
-$good = new Good($bd);
-echo $good->getOneGood(12);
+
+$good = new User();
+$goodModel = $good->insert(1,2,3);
+var_dump($goodModel);
 echo '<hr>';
-echo $good->getAll();
+var_dump($good->getAll());
