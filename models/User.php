@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-class User()
+class User extends Model
 {
     public $id;
     public $name;
