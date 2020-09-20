@@ -10,7 +10,7 @@ class User extends Model
     public $password;
 
 
-    protected function getTableName():string
+    protected static function getTableName():string
     {
         return 'users';
     }

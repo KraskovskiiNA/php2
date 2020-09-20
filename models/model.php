@@ -3,53 +3,83 @@ namespace app\models;
 use app\services\DB;
 abstract class Model
 {
-    abstract protected function getTableName():string;
+    abstract protected static function getTableName():string;
     /**
      * @return DB 
      */
-    protected function getDB()
+    protected static function getDB()
     {
         return DB::getInstance();
     }
 
-    public function getOneGood($id)
+    public static function getOneGood($id)
     {
-        $tableName = $this->getTableName();
+        $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE id = :id";
         $params = [':id' => $id];
-        return $this->getDB()->find($sql, $params);
+        return static::getDB()->findObject($sql, static::class, $params);
     }
 
-    public function getAll()
+    public static function getAll()
     {
-        $tableName = $this->getTableName();
+        $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName}";
-        return $this->getDB()->findAll($sql);
+        return static::getDB()->findAllObject($sql, static::class);
     }
 
-    public function insert($data)
+    public function insert()
     {
-        $tableName = $this->getTableName();
-        $insert = $this->getDB()->prepare("INSERT INTO {$tableName} (a, b, c) values (?, ?, ?)");
-        $insert->execute($data);
+        $fields = [];
+        $params = [];
+        foreach ($this as $fieldName => $value) {
+            if ($fieldName == 'id') {
+                continue;
+            }
+            $fields[] = $fieldName;
+            $params[":{$fieldName}"] = $value;
+        }
+        $sql = printf(
+            "INSERT INTO %s (%s) VALUES (%s)",
+            static::getTableName(),
+            implode(',', $fields),
+            implode(',', array_keys($params))
+        );
+        static::getDB()->execute($sql, $params);
+        $this->id = static::getDB()->getLastId();
     }
 
-    public function update($id)
+    public function update()
     {
-        $tableName = $this->getTableName();
-        $update = $this->getDB()->prepare('UPDATE {$tableName} SET name = :name WHERE id = :id');
+        $fields = [];
+        $params = [];
+        foreach ($this as $fieldName => $value) {
+            $fields[] = $fieldName;
+            $params[":{$fieldName}"] = $value;
+        }  
+        
+        $sql = sprintf(
+            "UPDATE %s SET %s = %s WHERE `id` = $this->id ",
+            static::getTableName(),
+            implode(',', $fields),
+            implode(',', $params)
+        );
+        
+        static::getDB()->execute($sql, $params);
+        $this->id = static::getDB()->getLastId();
     }
 
     public function save()
     {
         if (empty($this->id)) {
-            return $this->insert();
+            $this->insert();
+            return;
         }
-        return $this->update();
+        $this->update();
     }
 
-    public function delete($id)
+    public function delete()
     {
-        $delete = $this->getDB()->prepare('DELETE FROM {$tableName} WHERE id = :id');
+        $sql = sprintf("DELETE FROM %s WHERE `id` = $this->id",  static::getTableName());
+        static::getDB()->execute($sql);
     }
 }

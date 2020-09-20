@@ -47,8 +47,32 @@ class DB
         return $this->qwery($sql, $params)->fetch();
     }
 
-    public function findAll($sql, $patams = [])
+    public function findAll($sql, $params = [])
     {
         return $this->qwery($sql, $params)->fetchAll();
-    } 
+    }
+    
+    public function findObject($sql, $className, $params = [])
+    {
+        $PDOStatement = $this->qwery($sql, $params);
+        $PDOStatement->setFetchMode(\PDO::FETCH_CLASS, $className);
+        return $PDOStatement->fetch();
+    }
+
+    public function findAllObject($sql, $className, $params = [])
+    {
+        $PDOStatement = $this->qwery($sql, $params);
+        $PDOStatement->setFetchMode(\PDO::FETCH_CLASS, $className);
+        return $PDOStatement->fetchAll();
+    }
+
+    public function execute($sql, $params = [])
+    {
+        $this->qwery($sql, $params);
+    }
+
+    public function getLastId()
+    {
+        return $this->getConnection()->lastInsertId();
+    }
 }
