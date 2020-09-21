@@ -6,10 +6,7 @@ include dirname(__DIR__) . "/services/autoLoad.php";
 spl_autoload_register([(new AutoLoad()), 'load']);
 
 
-
-// $goodModel = User::getOneGood('2');
-// var_dump($goodModel);
-// echo '<hr>';
-// var_dump(User::getAll());
-
-
+$user = User::getOneGood(3);
+$user->name = 'newName';
+$user->password = 101010;
+$user->save();
