@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-class User()
+class User extends Model
 {
     public $id;
     public $name;
@@ -10,7 +10,7 @@ class User()
     public $password;
 
 
-    protected function getTableName():string
+    protected static function getTableName():string
     {
         return 'users';
     }

@@ -1,11 +1,29 @@
 <?php
 use app\services\AutoLoad;
-use app\models\Good;
-include dirname(__DIR__) . "/services/autoLoad.php";
-spl_autoload_register([(new autoLoad()), 'load']);
 
-$bd = new \app\services\DB();
-$good = new Good($bd);
-echo $good->getOneGood(12);
-echo '<hr>';
-echo $good->getAll();
+include dirname(__DIR__) . "/services/autoLoad.php";
+spl_autoload_register([(new AutoLoad()), 'load']);
+
+$controllerName = 'user';
+if (!empty(trim($_GET['c']))) {
+    $controllerName = trim($_GET['c']);
+}
+
+$actionName = '';
+if (!empty(trim($_GET['a']))) {
+    $actionName = trim($_GET['a']);
+}
+
+$controllerClass = '\\app\\controllers\\' . ucfirst($controllerName) . 'Controller';
+
+if (class_exists($controllerClass)) {
+    /**
+     * @var app\controllers\UserController $controller 
+     */
+    $controller = new $controllerClass();
+    echo $controller->run($actionName);
+} else {
+    echo '404';
+}
+
+
