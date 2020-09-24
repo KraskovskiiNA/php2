@@ -38,7 +38,7 @@ abstract class Model
             $fields[] = $fieldName;
             $params[":{$fieldName}"] = $value;
         }
-        $sql = printf(
+        $sql = sprintf(
             "INSERT INTO %s (%s) VALUES (%s)",
             static::getTableName(),
             implode(',', $fields),
@@ -50,18 +50,30 @@ abstract class Model
 
     public function update()
     {
-        $params = [];
-        foreach ($this as $fieldName => $value) {
-            $params[] = "`{$fieldName}`" . ' = ' . "'{$value}'";
-        }  
+        // $params = [];
+        // foreach ($this as $fieldName => $value) {
+        //     $params[] = "`{$fieldName}`" . ' = ' . "'{$value}'";
+        // }  
     
-        $sql = sprintf(
-            "UPDATE %s SET %s WHERE %s .`id` = $this->id ",
-            static::getTableName(),
-            implode(',', $params),
-            static::getTableName()
-        );
+        // $sql = sprintf(
+        //     "UPDATE %s SET %s WHERE %s .`id` = $this->id ",
+        //     static::getTableName(),
+        //     implode(',', $params),
+        //     static::getTableName()
+        // );
         
+        // static::getDB()->execute($sql, $params);
+        // $this->id = static::getDB()->getLastId();
+        $params = [];
+        $fields = [];
+        foreach ($this as $fieldName => $value) {
+            $params[":$fieldName"] = $value;
+            if ($fieldName == 'id') {
+                continue;
+            }
+            $fields[] = "{$fieldName} = :{$fieldName}";
+        }
+        $sql = sprintf("UPDATE %s SET %s WHERE id = :id", static::getTableName(), implode(',', $fields));
         static::getDB()->execute($sql, $params);
         $this->id = static::getDB()->getLastId();
     }

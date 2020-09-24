@@ -32,13 +32,32 @@ class UserController
     {
         $id = $this->getId();
         $user = User::getOneGood($id);
-        return $this->render('userOne', ['user' => $user]);
+        return $this->render('userOne', ['user' => $user, 'title' => $user->login]);
+    }
+
+    public function addAction()
+    {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            return $this->render('userAdd');
+        }
+        $user = new User;
+        $user->password = $_POST['password'];
+        $user->login = $_POST['login'];
+        $user->name = $_POST['name'];
+        $user->save();
+
+        header('location: /');
+        return '';
     }
 
     public function render($template, $params = [])
     {
         $content = $this->renderTmpl($template, $params);
-        return $this->renderTmpl('layouts/main', ['content' => $content]);
+        $title = 'My shop';
+        if (!empty($params['title'])) {
+            $title = $params[$title];
+        }
+        return $this->renderTmpl('layouts/main', ['content' => $content, 'title' => $title]);
     }
 
     public function renderTmpl($template, $params = [])
