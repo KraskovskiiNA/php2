@@ -2,15 +2,18 @@
 namespace app\controllers;
 
 use app\services\RenderI;
+use app\services\Request;
 
 abstract class controller
 {
     protected $defaultAction = 'all';
     protected $renderer;
+    protected $request;
 
-    public function __construct(RenderI $renderer)
+    public function __construct(RenderI $renderer, Request $request)
     {
         $this->renderer = $renderer;
+        $this->request = $request;
     }
 
     public function run($action)
@@ -29,9 +32,6 @@ abstract class controller
 
     protected function getId()
     {
-        if (empty($_GET['id'])) {
-            return 0;
-        }
-        return (int)$_GET['id'];
+        return $this->request->getId();
     }
 }
