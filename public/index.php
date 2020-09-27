@@ -1,8 +1,7 @@
 <?php
-use app\services\AutoLoad;
+use app\services\RenderServices;
 
-include dirname(__DIR__) . "/services/autoLoad.php";
-spl_autoload_register([(new AutoLoad()), 'load']);
+include dirname(__DIR__) . "/vendor/autoload.php";
 
 $controllerName = 'user';
 if (!empty(trim($_GET['c']))) {
@@ -20,7 +19,8 @@ if (class_exists($controllerClass)) {
     /**
      * @var app\controllers\UserController $controller 
      */
-    $controller = new $controllerClass();
+    $renderer = new RenderServices();
+    $controller = new $controllerClass($renderer);
     echo $controller->run($actionName);
 } else {
     echo '404';

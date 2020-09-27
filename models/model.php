@@ -50,20 +50,6 @@ abstract class Model
 
     public function update()
     {
-        // $params = [];
-        // foreach ($this as $fieldName => $value) {
-        //     $params[] = "`{$fieldName}`" . ' = ' . "'{$value}'";
-        // }  
-    
-        // $sql = sprintf(
-        //     "UPDATE %s SET %s WHERE %s .`id` = $this->id ",
-        //     static::getTableName(),
-        //     implode(',', $params),
-        //     static::getTableName()
-        // );
-        
-        // static::getDB()->execute($sql, $params);
-        // $this->id = static::getDB()->getLastId();
         $params = [];
         $fields = [];
         foreach ($this as $fieldName => $value) {
